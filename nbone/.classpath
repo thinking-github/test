@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="target/classes" path="src/main/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.j2eedt.core.MYECLIPSE_JAVAEE_6_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/net.sf.ezmorph_1.0.6.jar"/>
+	<classpathentry kind="lib" path="lib/net.sf.json_2.4.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework_3.1.1.RELEASE.jar" sourcepath="E:/IT/Java/2.spring/spring-framework-3.2.8.RELEASE/spring-3.2.8.RELEASE-complete-sources.zip"/>
+	<classpathentry kind="lib" path="lib/xom-1.2.10.jar"/>
+	<classpathentry kind="lib" path="lib/org.codehaus.jackson.core_1.9.8.jar"/>
+	<classpathentry kind="lib" path="lib/org.codehaus.jackson.mapper_1.9.8.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
