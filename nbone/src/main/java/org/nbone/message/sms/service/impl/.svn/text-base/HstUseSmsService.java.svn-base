@@ -1,0 +1,92 @@
+package com.sgcc.hst.ws.notice.sms.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.chinagdn.ws.SubmitSmsResp;
+import com.sgcc.hst.ws.client.sms.dao.IMasForHstDao;
+import com.sgcc.hst.ws.client.tms.dao.ITmsForHstDao;
+import com.sgcc.hst.ws.common.util.Constant;
+import com.sgcc.hst.ws.notice.sms.service.IUseSmsService;
+import com.sgcc.hst.ws.notice.sms.util.HstSmsDataUtils;
+import com.sgcc.hst.ws.notice.sms.vo.SmsVo;
+
+/**
+ * 会管系统发送短信实现
+ * @author Thinking
+ *
+ */
+public class HstUseSmsService implements IUseSmsService {
+	private static final Log log = LogFactory.getLog(HstUseSmsService.class);
+	@Resource
+	private IMasForHstDao iMasForHstDao;
+	@Autowired
+	private ITmsForHstDao iTmsForHstDao;
+
+	public Object send(SmsVo smsVo) {
+		
+		            String smsContent  = smsVo.getSmsContent();
+		            List<String> userNumberList  = smsVo.getUserNumberList();
+		            
+		            int phoneSize  = smsVo .getUserNumberList().size();
+		        	Map<String,String> resultMap = new HashMap<String,String>();// 接口日志记录
+		        	String smsId = "";//短信平台返回码
+					String hRet = "1";//短信平台返回结果码
+					
+					
+		            try {
+		            	SubmitSmsResp submitSmsResp = HstSmsDataUtils.send(smsContent, userNumberList);
+					
+						Map submitSmsRespMap = HstSmsDataUtils.submitSmsRespToMap(submitSmsResp);
+						Map resultBody = (Map) submitSmsRespMap.get(Constant.BODY_KEY);
+						if(StringUtils.isNotEmpty(resultBody.get("SmsID")+"")){
+							smsId = String.valueOf(resultBody.get("SmsID"));
+						}
+						if(StringUtils.isNotEmpty(resultBody.get("hRet")+"")){
+							hRet = String.valueOf(resultBody.get("hRet")).trim();
+							int startInt = hRet.indexOf("(");
+							if(startInt!=-1){
+								hRet = hRet.substring(0,startInt).trim();
+							}
+						}
+						if ("0".equals(hRet)) {
+							resultMap.put("remark", "短信发送成功：共 " + phoneSize+" 条");
+							log.info("MAS_短信发送成功");
+						}else{
+							resultMap.put("remark", "短信发送失败：共 " + phoneSize+" 条");
+							log.info("MAS_短信发送失败");
+						}
+					} catch (Exception e) {
+					resultMap.put("remark", "短信发送失败：共 " + phoneSize+" 条");
+					log.error("MAS_调用短信平台出现异常", e);
+				} finally{
+					try {
+						resultMap.put("objId","方法名:submitSmsReq");
+						resultMap.put("logType", Constant.LOG_TYPE_3);
+						// 保存短信发送记录
+						SmsVo smsVo1 = new SmsVo(userNumberList, smsContent);
+						smsVo1.setSmsId(smsId);
+						smsVo1.sethRet(hRet);
+						
+						iMasForHstDao.saveMas(smsVo1);
+						// 保存调用HST短信接口记录
+						iTmsForHstDao.saveConnLog(resultMap);
+					} catch (Exception e) {
+						log.error("MAS_保存短信发送记录出现异常", e);
+					}
+				}
+		
+		return null;
+	}
+
+	
+	
+}
